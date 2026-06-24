@@ -17,9 +17,10 @@ const crypto     = require('crypto');
 const path       = require('path');
 const rateLimit  = require('express-rate-limit');
 
-// ── Optional: SendGrid (uncomment when API key is ready) ──────────────────
-// const sgMail = require('@sendgrid/mail');
-// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const sgMail = require('@sendgrid/mail');
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+}
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -52,38 +53,34 @@ function generateOTP() {
 }
 
 async function sendOTPEmail(toEmail, code) {
-  // ── PLACEHOLDER: SendGrid integration ─────────────────────────────────
-  // When you have your SendGrid API key:
-  //   1. Add SENDGRID_API_KEY=your_key_here to .env
-  //   2. Add FROM_EMAIL=verified@yourdomain.com to .env
-  //   3. Uncomment the sgMail lines at the top and below
-  //
-  // const msg = {
-  //   to      : toEmail,
-  //   from    : { email: FROM_EMAIL, name: FROM_NAME },
-  //   subject : 'Your Vishwa Golf Profile login code',
-  //   text    : `Your one-time login code is: ${code}\n\nThis code expires in 10 minutes.`,
-  //   html    : `
-  //     <div style="font-family:sans-serif;max-width:420px;margin:auto;padding:32px">
-  //       <h2 style="font-size:22px;margin-bottom:8px">Your login code</h2>
-  //       <p style="color:#555;margin-bottom:24px">
-  //         Use this code to access the Vishwa Mamidi Golf Profile admin panel.
-  //       </p>
-  //       <div style="background:#0A1628;border-left:3px solid #C9A84C;
-  //                   padding:20px 28px;border-radius:2px;text-align:center;
-  //                   font-size:36px;font-weight:700;letter-spacing:0.2em;color:#E8C96A">
-  //         ${code}
-  //       </div>
-  //       <p style="color:#999;font-size:12px;margin-top:20px">
-  //         Expires in 10 minutes. If you didn't request this, ignore this email.
-  //       </p>
-  //     </div>`,
-  // };
-  // await sgMail.send(msg);
-  // ── END PLACEHOLDER ────────────────────────────────────────────────────
+  if (!process.env.SENDGRID_API_KEY) {
+    // DEV-ONLY fallback: log the code to the console
+    console.log(`\n[DEV] OTP for ${toEmail}: ${code}\n`);
+    return;
+  }
 
-  // DEV-ONLY fallback: log the code to the console
-  console.log(`\n[DEV] OTP for ${toEmail}: ${code}\n`);
+  const msg = {
+    to      : toEmail,
+    from    : { email: FROM_EMAIL, name: FROM_NAME },
+    subject : 'Your Vishwa Golf Profile login code',
+    text    : `Your one-time login code is: ${code}\n\nThis code expires in 10 minutes.`,
+    html    : `
+      <div style="font-family:sans-serif;max-width:420px;margin:auto;padding:32px">
+        <h2 style="font-size:22px;margin-bottom:8px">Your login code</h2>
+        <p style="color:#555;margin-bottom:24px">
+          Use this code to access the Vishwa Mamidi Golf Profile admin panel.
+        </p>
+        <div style="background:#0A1628;border-left:3px solid #C9A84C;
+                    padding:20px 28px;border-radius:2px;text-align:center;
+                    font-size:36px;font-weight:700;letter-spacing:0.2em;color:#E8C96A">
+          ${code}
+        </div>
+        <p style="color:#999;font-size:12px;margin-top:20px">
+          Expires in 10 minutes. If you didn't request this, ignore this email.
+        </p>
+      </div>`,
+  };
+  await sgMail.send(msg);
 }
 
 // ── Routes ─────────────────────────────────────────────────────────────────
