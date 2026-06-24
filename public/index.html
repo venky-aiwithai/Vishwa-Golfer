@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vishwa Mamidi — Junior Golf Recruit</title>
+  <meta name="description" content="Official recruiting profile for Vishwa Mamidi, junior golfer from Hyderabad, India.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- ADMIN BAR -->
+  <div class="admin-bar" id="adminBar">
+    <div class="admin-bar-left">
+      <span class="admin-dot"></span> Admin mode — editing enabled
+    </div>
+    <div class="admin-bar-right">
+      <button class="bar-btn save" onclick="saveProfile()">Save changes</button>
+      <button class="bar-btn logout" onclick="logout()">Log out</button>
+    </div>
+  </div>
+
+  <!-- LOGIN OVERLAY -->
+  <div class="overlay" id="overlay">
+    <!-- Step 1: Email -->
+    <div class="login-card" id="step1">
+      <div class="login-eyebrow">Admin access</div>
+      <div class="login-title">Sign in to edit</div>
+      <div class="login-sub">Enter the admin email address to receive a one-time passcode.</div>
+      <div class="field-lbl">Email address</div>
+      <input class="field-input" id="emailInput" type="email" placeholder="vmachavarapu@gmail.com" autocomplete="off">
+      <button class="login-btn" id="sendOtpBtn" onclick="sendOTP()">Send one-time code</button>
+      <div class="login-err" id="emailErr"></div>
+      <div class="login-hint">Only the registered admin email can access edit mode.</div>
+    </div>
+
+    <!-- Step 2: OTP -->
+    <div class="login-card" id="step2">
+      <button class="back-link" onclick="goBack()">← Back</button>
+      <div class="login-eyebrow">Verify identity</div>
+      <div class="login-title">Enter your code</div>
+      <div class="login-sub" id="otpSentTo">A 6-digit code was sent to your email.</div>
+      <div class="otp-row" id="otpRow">
+        <input class="otp-box" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+        <input class="otp-box" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+        <input class="otp-box" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+        <input class="otp-box" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+        <input class="otp-box" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+        <input class="otp-box" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]">
+      </div>
+      <button class="login-btn" id="verifyBtn" onclick="verifyOTP()">Verify &amp; unlock</button>
+      <div class="login-err" id="otpErr"></div>
+      <div class="resend-row">
+        Didn't get it?
+        <button class="resend-btn" id="resendBtn" onclick="resendOTP()" disabled>
+          Resend in <span id="countdown">30</span>s
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING LOGIN BUTTON -->
+  <button class="login-trigger" id="loginTrigger" onclick="showOverlay()">
+    🔒 Admin login
+  </button>
+
+  <!-- ═══ PROFILE CONTENT ═══ -->
+  <div class="site" id="site">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-bg-ball"></div>
+      <div class="hero-eyebrow">Junior Golf · Recruit Profile · 2026</div>
+      <h1 class="hero-name">Vishwa<br><span>Mamidi</span></h1>
+      <div class="hero-sub">
+        <span class="ef" id="hSchool">Delhi Public School</span> ·
+        <span class="ef" id="hCity">Hyderabad, India</span> · Age
+        <span class="ef" id="hAge">13</span>
+      </div>
+      <div class="hero-tags">
+        <span class="tag"><span class="ef" id="hHand">Right-handed</span></span>
+        <span class="tag"><span class="ef" id="hType">Junior golfer</span></span>
+        <span class="tag"><span class="ef" id="hLoc">Hyderabad, India</span></span>
+      </div>
+      <div class="hero-contact">
+        <a href="mailto:vmachavarapu@gmail.com" id="hEmail">vmachavarapu@gmail.com</a>
+      </div>
+    </section>
+
+    <!-- STAT STRIP -->
+    <div class="stat-strip">
+      <div class="strip-stat">
+        <span class="strip-num gold"><input class="ef" id="sHandicap" value="+1.4"></span>
+        <span class="strip-lbl">Handicap Index</span>
+      </div>
+      <div class="strip-stat">
+        <span class="strip-num"><input class="ef" id="sScoring" value="71.2"></span>
+        <span class="strip-lbl">Scoring avg</span>
+      </div>
+      <div class="strip-stat">
+        <span class="strip-num"><input class="ef" id="sDrive" value="292"></span>
+        <span class="strip-lbl">Drive (yards)</span>
+      </div>
+      <div class="strip-stat">
+        <span class="strip-num"><input class="ef" id="sGir" value="68%"></span>
+        <span class="strip-lbl">Greens in regulation</span>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section class="section">
+      <div class="section-eyebrow">About the player</div>
+      <h2 class="section-title">Who is Vishwa Mamidi</h2>
+      <div class="about-grid">
+        <p class="about-text ce" id="aboutText" contenteditable="false">
+          Vishwa Mamidi is a 13-year-old junior golfer from Hyderabad, India with an exceptional competitive record for his age. A natural student of the game, Vishwa combines technical precision with elite course management — qualities that set him apart at every junior tournament he enters. He trains daily and is committed to developing his game to compete at the highest collegiate level.
+        </p>
+        <div class="about-facts">
+          <div class="fact-row"><span class="fact-lbl">Full name</span><span class="fact-val">Vishwa Mamidi</span></div>
+          <div class="fact-row"><span class="fact-lbl">Age</span><span class="fact-val"><input class="ef" id="fAge" value="13"></span></div>
+          <div class="fact-row"><span class="fact-lbl">School</span><span class="fact-val"><input class="ef" id="fSchool" value="Delhi Public School"></span></div>
+          <div class="fact-row"><span class="fact-lbl">Location</span><span class="fact-val"><input class="ef" id="fCity" value="Hyderabad, India"></span></div>
+          <div class="fact-row"><span class="fact-lbl">Dominant hand</span><span class="fact-val"><input class="ef" id="fHand" value="Right"></span></div>
+          <div class="fact-row"><span class="fact-lbl">Coach</span><span class="fact-val"><input class="ef" id="fCoach" value="—"></span></div>
+          <div class="fact-row"><span class="fact-lbl">GPA</span><span class="fact-val"><input class="ef" id="fGpa" value="—"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PERFORMANCE STATS -->
+    <section class="section dark">
+      <div class="section-eyebrow">Performance metrics</div>
+      <h2 class="section-title">By the numbers</h2>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <span class="stat-box-num"><input class="ef" value="61%"></span>
+          <span class="stat-box-lbl">Fairways hit</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-box-num"><input class="ef" value="28.4"></span>
+          <span class="stat-box-lbl">Putts per round</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-box-num"><input class="ef" value="54%"></span>
+          <span class="stat-box-lbl">Scrambling</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-box-num"><input class="ef" value="47%"></span>
+          <span class="stat-box-lbl">Sand saves</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-box-num"><input class="ef" value="65"></span>
+          <span class="stat-box-lbl">Low round (18 holes)</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-box-num"><input class="ef" value="48"></span>
+          <span class="stat-box-lbl">Birdies this season</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOURNAMENT HISTORY -->
+    <section class="section">
+      <div class="section-eyebrow">Competitive record</div>
+      <h2 class="section-title">Tournament history</h2>
+      <table class="tourn-table">
+        <thead>
+          <tr>
+            <th style="width:44px">Place</th>
+            <th>Tournament</th>
+            <th>Date</th>
+            <th>Score</th>
+            <th class="del-col"></th>
+          </tr>
+        </thead>
+        <tbody id="tournBody">
+          <tr>
+            <td><span class="place-badge place-1">1st</span></td>
+            <td><div class="tourn-name"><input class="ef" value="Lone Star Invitational"></div></td>
+            <td><span class="tourn-date"><input class="ef" value="Aug 2024"></span></td>
+            <td><span class="score-chip"><input class="ef score-ef" value="-11 (205)"></span></td>
+            <td><button class="del-btn" onclick="this.closest('tr').remove()">✕</button></td>
+          </tr>
+          <tr>
+            <td><span class="place-badge place-top">T-2</span></td>
+            <td><div class="tourn-name"><input class="ef" value="Texas Junior State Championship"></div></td>
+            <td><span class="tourn-date"><input class="ef" value="Jun 2025"></span></td>
+            <td><span class="score-chip"><input class="ef score-ef" value="-8 (208)"></span></td>
+            <td><button class="del-btn" onclick="this.closest('tr').remove()">✕</button></td>
+          </tr>
+          <tr>
+            <td><span class="place-badge place-top">5th</span></td>
+            <td><div class="tourn-name"><input class="ef" value="AJGA Junior at Austin"></div></td>
+            <td><span class="tourn-date"><input class="ef" value="Apr 2025"></span></td>
+            <td><span class="score-chip"><input class="ef score-ef" value="-5 (139)"></span></td>
+            <td><button class="del-btn" onclick="this.closest('tr').remove()">✕</button></td>
+          </tr>
+          <tr>
+            <td><span class="place-badge place-mid">9th</span></td>
+            <td><div class="tourn-name"><input class="ef" value="UIL 5A Regional"></div></td>
+            <td><span class="tourn-date"><input class="ef" value="Oct 2024"></span></td>
+            <td><span class="score-chip"><input class="ef score-ef" value="E (72)"></span></td>
+            <td><button class="del-btn" onclick="this.closest('tr').remove()">✕</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="add-tourn-btn" id="addTournBtn" onclick="addTournament()">+ Add tournament</button>
+    </section>
+
+    <!-- VIDEO HIGHLIGHTS -->
+    <section class="section dark">
+      <div class="section-eyebrow">Swing footage</div>
+      <h2 class="section-title">Video highlights</h2>
+      <div class="video-grid" id="videoGrid">
+        <div class="video-card">
+          <div class="video-thumb">
+            <div class="play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="video-info">
+            <div class="video-title">Full swing — driver</div>
+            <div class="video-meta">Face-on · Jun 2025</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <div class="play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <div class="video-info">
+            <div class="video-title">Short game highlights</div>
+            <div class="video-meta">Chipping &amp; putting · Jun 2025</div>
+          </div>
+        </div>
+        <div class="upload-card" id="videoUploadCard" onclick="document.getElementById('videoInput').click()">
+          <div class="upload-icon">
+            <svg width="16" height="16" fill="none" stroke="#C9A84C" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <span>Upload video<br>.mp4 · .mov</span>
+        </div>
+      </div>
+      <input type="file" id="videoInput" accept="video/*" multiple>
+    </section>
+
+    <!-- DOCUMENTS -->
+    <section class="section dark">
+      <div class="section-eyebrow">Supporting materials</div>
+      <h2 class="section-title">Documents</h2>
+      <div class="doc-list" id="docList">
+        <div class="doc-row">
+          <div class="doc-icon">
+            <svg width="16" height="16" fill="none" stroke="#C9A84C" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+          </div>
+          <span class="doc-name">Academic_Transcript_Vishwa_Mamidi.pdf</span>
+          <span class="doc-size">240 KB</span>
+        </div>
+      </div>
+      <div class="upload-zone-doc" id="docUploadZone" onclick="document.getElementById('docInput').click()">
+        Upload transcript · scorecard · letter of recommendation
+      </div>
+      <input type="file" id="docInput" accept=".pdf,.docx,.jpg,.png" multiple>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="cta-title">Interested in Vishwa?</div>
+      <div class="cta-sub">Reach out directly to discuss recruitment opportunities</div>
+      <a class="cta-email" href="mailto:vmachavarapu@gmail.com">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        vmachavarapu@gmail.com
+      </a>
+    </section>
+
+  </div><!-- /.site -->
+
+  <div class="toast" id="toast"></div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
