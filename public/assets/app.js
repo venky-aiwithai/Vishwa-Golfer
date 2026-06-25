@@ -312,10 +312,21 @@ function addTournament() {
     <td><span class="score-chip">
       <input class="ef score-ef" value="—" style="pointer-events:all;border-bottom:1px dashed rgba(201,168,76,0.45)">
     </span></td>
+    <td class="lb-col">
+      <a class="lb-link" href="#" target="_blank" rel="noopener noreferrer" title="View leaderboard">Leaderboard ↗</a>
+      <input class="ef lb-url-ef" value="" placeholder="Leaderboard URL" style="pointer-events:all;border-bottom:1px dashed rgba(201,168,76,0.45)">
+    </td>
     <td><button class="del-btn" style="display:inline-block" onclick="this.closest('tr').remove()">✕</button></td>`;
   document.getElementById('tournBody').appendChild(tr);
   tr.querySelector('input').focus();
 }
+
+/* ─── Sync leaderboard URL input with its link ───────────── */
+document.getElementById('tournBody').addEventListener('input', e => {
+  if (!e.target.classList.contains('lb-url-ef')) return;
+  const link = e.target.closest('.lb-col').querySelector('.lb-link');
+  link.href = e.target.value.trim() || '#';
+});
 
 /* ─── Enter key on email field ────────────────────────────── */
 document.getElementById('emailInput').addEventListener('keydown', e => {

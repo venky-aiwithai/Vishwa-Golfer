@@ -162,9 +162,13 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// ── Start ──────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n✅  Golf profile server running on http://localhost:${PORT}`);
-  console.log(`    Admin email : ${ADMIN_EMAIL}`);
-  console.log(`    SendGrid    : ${process.env.SENDGRID_API_KEY ? '✓ configured' : '⚠ not configured (OTP logged to console)'}\n`);
-});
+// ── Start (local dev / plain Node hosting only — not used on Firebase) ─────
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`\n✅  Golf profile server running on http://localhost:${PORT}`);
+    console.log(`    Admin email : ${ADMIN_EMAIL}`);
+    console.log(`    SendGrid    : ${process.env.SENDGRID_API_KEY ? '✓ configured' : '⚠ not configured (OTP logged to console)'}\n`);
+  });
+}
+
+module.exports = app;
