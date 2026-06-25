@@ -70,9 +70,8 @@ http://localhost:3000
 4. Go to **Settings → Sender Authentication → Single Sender Verification**
    - Create a sender with the email you want to send from
    - Set `FROM_EMAIL` in `.env` to match
-5. In `server/index.js`, uncomment the `sgMail` lines (marked with `PLACEHOLDER`)
 
-Until SendGrid is configured, OTP codes are printed to the server console for development use.
+Until `SENDGRID_API_KEY` is set, OTP codes are printed to the server console for development use.
 
 ---
 
@@ -96,7 +95,33 @@ Until SendGrid is configured, OTP codes are printed to the server console for de
 3. Add environment variables in the Variables tab
 4. Railway auto-detects Node.js and deploys
 
-### Option C — VPS / DigitalOcean
+### Option C — Firebase (Hosting + Cloud Functions)
+
+The Express API is wrapped as a Cloud Function so it can run behind Firebase Hosting.
+
+1. Install the CLI and log in:
+   ```bash
+   npm install -g firebase-tools
+   firebase login
+   ```
+2. Create a project at [console.firebase.google.com](https://console.firebase.google.com) (or use an existing one), then put its project ID into `.firebaserc` (replace `REPLACE_WITH_YOUR_FIREBASE_PROJECT_ID`).
+3. Set the function's environment variables (SendGrid key, admin email, from email):
+   ```bash
+   firebase functions:secrets:set SENDGRID_API_KEY
+   firebase functions:config:set admin.email="vmachavarapu@gmail.com" sendgrid.from_email="noreply@yourdomain.com"
+   ```
+   Or simplest: set them as plain env vars for 2nd-gen functions via `firebase functions:secrets:set` for the API key, and pass `ADMIN_EMAIL` / `FROM_EMAIL` through `functions/.env` (not committed) for non-secret values.
+4. Deploy:
+   ```bash
+   firebase deploy
+   ```
+
+How it's wired:
+- `firebase.json` routes `/api/**` requests to the `api` Cloud Function and serves everything else as static files from `public/`.
+- `functions/index.js` requires the Express app and exposes it via `functions.https.onRequest(app)`.
+- The `predeploy` hook in `firebase.json` copies `server/` into `functions/server/` and runs `npm install` in `functions/` before each deploy, so `server/index.js` stays the single source of truth — no code duplication to maintain by hand.
+
+### Option D — VPS / DigitalOcean
 
 ```bash
 # On your server
